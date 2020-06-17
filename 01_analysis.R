@@ -70,6 +70,7 @@ salaries %>%
 
 # Ah, much better.  :-)
 
+### SAVING AND ITERATING ####
 
 # let's say I want to save the results?
 # we'll go back to the top team payrolls
@@ -88,7 +89,7 @@ teampayrolls %>%
   filter(total_dollars > 200000000)
 
 # we can export it to a spreadsheet to share with others
-write_xlsx(teampayrolls, "teampayrolls.xlsx")
+write_xlsx(teampayrolls, "output/teampayrolls.xlsx")
 
 
 # we can even pull that slice of data into charts we want to make

@@ -11,6 +11,8 @@ salaries <- read_excel("data/MLB2018.xlsx") %>%
 salaries 
 
 
+#### ARRANGING ####
+
 #which players get paid the most?
 salaries %>% 
   arrange(desc(salary))
@@ -36,4 +38,34 @@ salaries %>%
   top_n(n = 1, wt = salary) 
 
 #And if we wanted to know the top 5 for each? Just change one number above and re-run.
+
+
+#### GROUPING ####
+
+# What the total payroll paid out by each team?
+salaries %>% 
+  group_by(team) %>% 
+  summarise(total_dollars = sum(salary)) %>% 
+  arrange(desc(total_dollars))
+
+# What the total paid in the league for each position?
+salaries %>% 
+  group_by(pos) %>%  # <--this is all that changed
+  summarise(total_dollars = sum(salary)) %>% 
+  arrange(desc(total_dollars))
+
+# What about the median paid for each position?
+salaries %>% 
+  group_by(pos) %>% 
+  summarise(average_paid = mean(salary)) %>% 
+  arrange(desc(average_paid))
+
+# And if you don't believe in the Designated Hitter?
+salaries %>% 
+  filter(pos != "DH") %>% 
+  group_by(pos) %>% 
+  summarise(average_paid = mean(salary)) %>% 
+  arrange(desc(average_paid))
+
+# Ah, much better.  :-)
 

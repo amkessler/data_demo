@@ -2,6 +2,7 @@ library(tidyverse)
 library(janitor)
 library(scales)
 library(readxl)
+library(writexl)
 
 #import the data
 salaries <- read_excel("data/MLB2018.xlsx") %>% 
@@ -69,3 +70,39 @@ salaries %>%
 
 # Ah, much better.  :-)
 
+
+# let's say I want to save the results?
+# we'll go back to the top team payrolls
+# we can give it a name within R
+teampayrolls <- salaries %>% 
+  group_by(team) %>% 
+  summarise(total_dollars = sum(salary)) %>% 
+  arrange(desc(total_dollars))
+
+teampayrolls
+
+# now we can do all sorts of things with our new named slice of data
+
+# we can filter based on it and do additional analysis
+teampayrolls %>% 
+  filter(total_dollars > 200000000)
+
+# we can export it to a spreadsheet to share with others
+write_xlsx(teampayrolls, "teampayrolls.xlsx")
+
+
+# we can even pull that slice of data into charts we want to make
+teampayrolls %>% 
+  mutate(team = fct_reorder(team, total_dollars)) %>%
+  # head(10) %>% #unccmment to limit t
+  ggplot(aes(x = team, y = total_dollars)) +
+  geom_col(fill = "lightblue") + theme_minimal() + coord_flip() +
+  labs(title="Baseball Teams by Payroll (2018)",
+       subtitle = "",
+       caption = "",
+       x ="", y = "") +
+  theme(plot.title = element_text(hjust = 0.5),
+        plot.subtitle = element_text(hjust = 0.5)) +
+  theme(legend.title=element_blank()) +
+  theme(axis.text.x  = element_text(angle=45, vjust=0.5, size = 8)) +
+  scale_y_continuous(labels=dollar_format())
